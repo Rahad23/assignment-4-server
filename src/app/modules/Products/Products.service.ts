@@ -39,6 +39,7 @@ const getHomePageProductsIntoDB = async (query) => {
       Product.find().populate('category', {
         _id: 1,
         name: 1,
+        stock: 1,
       }),
       query,
     )
@@ -145,11 +146,10 @@ const editProductIntoDB = async (payload, file: any, id: string) => {
   return result;
 };
 
-const deleteProductIntoDB = async(id: string)=>{
-  const result = await Product.findByIdAndDelete({_id: id});
-  return result
-}
-
+const deleteProductIntoDB = async (id: string) => {
+  const result = await Product.findByIdAndDelete({ _id: id });
+  return result;
+};
 
 export const productService = {
   createProductIntoDB,
@@ -157,5 +157,5 @@ export const productService = {
   getSingleProductIntoDB,
   getHomePageProductsIntoDB,
   editProductIntoDB,
-  deleteProductIntoDB
+  deleteProductIntoDB,
 };

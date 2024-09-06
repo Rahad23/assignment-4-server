@@ -33,12 +33,14 @@ const makeAddToCartService = async (data: TAddToCart) => {
 const getAddToCartProductService = async () => {
   try {
     const result = await AddToCart.find()
+      .select('-createdAt -updatedAt')
       .populate('productId', {
         productImg: 1,
         name: 1,
         price: 1,
       })
       .populate('category', { name: 1, stock: 1 });
+
     return result;
   } catch (error) {
     console.log(error);
