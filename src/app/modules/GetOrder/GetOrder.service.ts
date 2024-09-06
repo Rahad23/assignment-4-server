@@ -12,10 +12,11 @@ const orderMakeIntoDB = async (payload: TOrder) => {
         message: 'Order failed!',
       };
     }
+    const orderQuantity = payload.quantity ?? 1;
 
     await Category.findOneAndUpdate(
       { _id: payload.category },
-      { $inc: { stock: -payload?.quantity } },
+      { $inc: { stock: -orderQuantity } },
       { new: true },
     );
 

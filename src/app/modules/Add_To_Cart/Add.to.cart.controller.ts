@@ -6,7 +6,7 @@ import { addToCartService } from './Add.to.cart.service';
 const makeAddToCart = catchAsync(async (req, res) => {
   const result = await addToCartService.makeAddToCartService(req.body);
 
-  if (result?.status === false) {
+  if ('status' in result && (result.status === false) === false) {
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: false,

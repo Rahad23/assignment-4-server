@@ -5,7 +5,11 @@ import { Product } from './Products.model';
 import { Category } from '../Category/category.model';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import QueryBuilder from '../../builder/QueryBuilder';
-import { productSearchableFields } from './Products.contance';
+import {
+  ICategory,
+  productSearchableFields,
+  TUpdateProduct,
+} from './Products.contance';
 
 const createProductIntoDB = async (payload: TProduct, file: any) => {
   const categoryId = payload?.category;
@@ -33,7 +37,7 @@ const createProductIntoDB = async (payload: TProduct, file: any) => {
   }
 };
 
-const getHomePageProductsIntoDB = async (query) => {
+const getHomePageProductsIntoDB = async (query: Record<string, unknown>) => {
   try {
     const productQuery = new QueryBuilder(
       Product.find().populate('category', {
@@ -60,7 +64,7 @@ const getHomePageProductsIntoDB = async (query) => {
   }
 };
 
-const getProductIntoDB = async (query) => {
+const getProductIntoDB = async (query: Record<string, unknown>) => {
   // Extracting the value inside quotes
   if (query.searchTerm) {
     const productQuery = new QueryBuilder(
@@ -80,7 +84,7 @@ const getProductIntoDB = async (query) => {
       meta,
     };
   }
-  if (query.searchCategory) {
+  if (typeof query.searchCategory === 'string') {
     const sortData = JSON.parse(query.searchCategory);
     // Extract price range values
     const startPrice = parseFloat(sortData.priceRange.split('-')[0]);
@@ -96,8 +100,9 @@ const getProductIntoDB = async (query) => {
     const filteredProducts = productFilter.filter((product) => {
       const productPrice = parseFloat(product.price);
 
+      const productCategory = product?.category as unknown as ICategory;
       return (
-        (!sortData.category || product?.category?.name === sortData.category) &&
+        (!sortData.category || productCategory?.name === sortData.category) &&
         (!sortData.priceRange ||
           (productPrice >= startPrice && productPrice <= endPrice))
       );
@@ -133,7 +138,11 @@ const getSingleProductIntoDB = async (id: string) => {
   return result;
 };
 
-const editProductIntoDB = async (payload, file: any, id: string) => {
+const editProductIntoDB = async (
+  payload: TUpdateProduct,
+  file: any,
+  id: string,
+) => {
   if (file) {
     const imageName = `${payload.name}-${new Date().getTime()}`;
     const path = file?.path;

@@ -3,7 +3,7 @@ import AppError from '../../errors/AppError';
 import { Category } from '../Category/category.model';
 import { TAddToCart } from './Add.to.cart.interface';
 import { AddToCart } from './Add.to.cart.model';
-import { quantityIncreaseDecrease } from './Add.to.cart.contance';
+import { quantityIncreaseDecrease, TProduct } from './Add.to.cart.contance';
 
 const makeAddToCartService = async (data: TAddToCart) => {
   const productExistInCart = await AddToCart.exists({
@@ -71,13 +71,11 @@ const updateAddToCartQuantity = async (payload: {
   if (!findCartProduct) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Add to cart data not found!');
   }
-
+  const product__ = findCartProduct.productId as unknown as TProduct;
   const calculatePrice =
     quantityIncreaseDecrease.INCREASE === payload.action
-      ? Number(findCartProduct.price) +
-        Number(findCartProduct?.productId?.price)
-      : Number(findCartProduct.price) -
-        Number(findCartProduct?.productId?.price);
+      ? Number(findCartProduct.price) + Number(product__.price)
+      : Number(findCartProduct.price) - Number(product__.price);
 
   const quantityWithPrice = {
     quantity: payload.quantity,

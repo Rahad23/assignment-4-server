@@ -3,6 +3,7 @@ import AppError from '../../errors/AppError';
 import { Product } from '../Products/Products.model';
 import { TCategory } from './category.interface';
 import { Category } from './category.model';
+import { TUpdateCategoryData } from './category.contance';
 
 const createCategoryInToDB = async (payload: TCategory) => {
   const result = await Category.create(payload);
@@ -30,7 +31,6 @@ const getCategoryBaseProduct = async (id: string) => {
 };
 
 const getSingleCategoryIntoDB = async (id: string) => {
-
   const products = await Product.find({
     category: id,
   }).populate('category');
@@ -45,13 +45,13 @@ const getSingleCategoryIntoDB = async (id: string) => {
 
   const result = {
     category,
-    products: products?.length
-  }
+    products: products?.length,
+  };
 
   return result;
 };
 
-const updateSingleCategoryIntoDB = async (payload) => {
+const updateSingleCategoryIntoDB = async (payload: TUpdateCategoryData) => {
   const category = await Category.findByIdAndUpdate(
     { _id: payload.id },
     { name: payload?.name, stock: payload?.stock },
