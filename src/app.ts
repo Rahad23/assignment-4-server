@@ -15,8 +15,14 @@ const app: Application = express();
 app.use(express.json());
 app.use(cookieParser());
 //netlify link
-// https://hilarious-travesseiro-00e33d.netlify.app
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+// https://eco-shop-online-merketplace.netlify.app
+//local host: http://localhost:5173
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  }),
+);
 
 // application routes
 app.use('/api/v2', router);
